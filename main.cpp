@@ -16,24 +16,24 @@ int main() {
     // cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
     cout << endl;
 
-	progCpp programCpp;
-	programCpp.open("example.txt");
-	programCpp.translate();
-	programCpp.save("example.cpp");
-	// cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
-	cout << endl;
+    progCpp programCpp;
+    programCpp.open("example.txt");
+    programCpp.translate();
+    programCpp.save("example.cpp");
+    // cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
+    cout << endl;
 
     cout << "Translated Pascal-program: " << endl;
     cout << endl;
     // cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
     cout << endl;
 
-	progPas programPas;
-	programPas.open("example.txt");
-	programPas.translate();
-	programPas.save("example.pas");
-	// cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
-	cout << endl;
+    progPas programPas;
+    programPas.open("example.txt");
+    programPas.translate();
+    programPas.save("example.pas");
+    // cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << endl;
+    cout << endl;
 
-	return 0;
+    return 0;
 }
