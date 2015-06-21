@@ -572,13 +572,13 @@ bool isCorrect(char *str) {
 */
 
 void putSpaces(char *str, unsigned int pos, unsigned int num) {
-    int i, len = strlen(str);
+    int int i, len = strlen(str);
 
-    for (i = 0; i < num; ++i) {
+    for (i = 0; i < num; i++) {
         strcat(str, " ");
     }
 
-    for (i = len+num-1; i >= pos; i--) {
+    for (i = len + num - 1; i >= pos; i--) {
         str[i] = str[i - num];
     }
 
