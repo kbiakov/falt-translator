@@ -1,6 +1,6 @@
-# Algorithmic language translator
+# FALT Translator
 
-<b>Formal algorithmic language program translator, June 2013</b>
+<b>Formal Algorithmic Language Translator, June 2013</b>
 
 This program allows you to translate the text of a program from formal algorithmic language to C and Pascal syntax.
 
