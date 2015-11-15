@@ -5,9 +5,11 @@ using namespace std;
 unsigned int maxStrs = 100;
 size_t defLen = 80;
 
+// CPP Block.
 
 progCpp :: progCpp() {
     fileSource = new char*[maxStrs];
+
     for (int i = 0; i < maxStrs; i++) {
         fileSource[i] = new char[defLen];
     }
@@ -17,6 +19,7 @@ progCpp :: ~progCpp() {
     for (int i = 0; i < maxStrs; i++) {
         delete[] fileSource[i];
     }
+
     delete[] fileSource;
 }
 
@@ -239,9 +242,11 @@ void progCpp::translate() {
     }
 }
 
+// PAS Block.
 
 progPas::progPas() {
     fileSource = new char*[maxStrs];
+
     for (int i = 0; i < maxStrs; i++) {
         fileSource[i] = new char[defLen];
     }
@@ -251,6 +256,7 @@ progPas::~progPas() {
     for (int i = 0; i < maxStrs; i++) {
         delete[] fileSource[i];
     }
+
     delete[] fileSource;
 }
 
@@ -316,13 +322,7 @@ void progPas::transBeg(unsigned int n, bool* firstBegin, char* moveBuffer) {
 
 void progPas::transEnd(unsigned int n, bool last) {
     strncpy(fileSource[n], "end", 3);
-
-    if (last) {
-        strcat(fileSource[n], ".\n");
-    } else {
-        strcat(fileSource[n], ";\n");
-    }
-
+    strcat(fileSource[n], (last ? '.' : ';') + '\n');
     puts(fileSource[n]);
 }
 
@@ -371,6 +371,7 @@ bool progPas::isCorrCods(unsigned int n) const {
                     findSym = 1;
                 }
             }
+
             if (!findSym) return 0;
         }
     }
@@ -385,7 +386,7 @@ bool progPas::isCorrAsns(unsigned int n) const {
 
     /*
     unsigned int lBrk = 0, rBrk = 0;
-    
+
     for (int i = 0; i < strlen(fileSource[n]); i++) {
         if (fileSource[n][i] == ' ') {
             // ... ?
@@ -406,7 +407,7 @@ bool progPas::isCorrAsns(unsigned int n) const {
 
     if (lBrk != rBrk) return 0;
     */
-    
+
     return 1;
 }
 
@@ -421,41 +422,52 @@ void progPas::translate() {
         unsigned int targetStr;
         unsigned begNums, endNums;
 
-        // search & translate declaration of int and float variables with name checking
         begNums = endNums = 0;
         moveBuffer[0] = 0;
+
+        // search & translate declaration of int and float variables with name checking
         for (targetStr = 0; targetStr < linesCount; ++targetStr) {
+
             // translate all assignments, declarations and conditions are ignored
             if (strstr(fileSource[targetStr], "=") != NULL && isCorrAsns(targetStr)
                     && !strstr(fileSource[targetStr], "öåë")
                     && !strstr(fileSource[targetStr], "âåù")
                     && !strstr(fileSource[targetStr], "åñëè")
                     && !strstr(fileSource[targetStr], "ïîêà")) {
+
                 transAssign(targetStr, firstBegin, moveBuffer);
             }
 
             // translate declarations and perhaps definitions of float variables
             if (tmpStr = strstr(fileSource[targetStr], "öåë")) {
                 tmp = fileSource[targetStr] - tmpStr;
+
                 if (tmp == NULL) {
                     transInt(targetStr, moveBuffer);
-                } else throw std::logic_error("Error! Invalid variable declaration.");
+                } else {
+                    throw std::logic_error("Error! Invalid variable declaration.");
+                }
             }
 
             // translate declarations and perhaps definitions of float variables
             if (tmpStr = strstr(fileSource[targetStr], "âåù")) {
                 tmp = fileSource[targetStr] - tmpStr;
+
                 if (tmp == NULL) {
                     transFloat(targetStr,moveBuffer);
-                } else throw std::logic_error("Error! Invalid variable declaration.");
+                } else {
+                    throw std::logic_error("Error! Invalid variable declaration.");
+                }
             }
-            
+
             // translate begin keywords
             if (tmpStr = strstr(fileSource[targetStr], "íà÷")) {
                 if (tmp == 0 && strlen(fileSource[targetStr]) == 3) {
                     ++begNums;
                     transBeg(targetStr, &firstBegin, moveBuffer);
-                } else throw std::logic_error("Error! Invalid begin keyword state.");
+                } else {
+                    throw std::logic_error("Error! Invalid begin keyword state.");
+                }
             }
 
             // translate end keywords
@@ -463,33 +475,45 @@ void progPas::translate() {
                 if (tmp == 0 && strlen(fileSource[targetStr]) == 3) {
                     ++endNums;
                     transEnd(targetStr, targetStr == linesCount-1);
-                } else throw std::logic_error("Error! Invalid end keyword state.");
+                } else {
+                    throw std::logic_error("Error! Invalid end keyword state.");
+                }
             }
 
             // validate condition operators
             if (tmpStr = strstr(fileSource[targetStr], "åñëè")) {
                 tmp = fileSource[targetStr] - tmpStr;
                 tmpStr = strstr(fileSource[targetStr], "òî");
+
                 if (tmpStr == NULL) {
                     throw std::logic_error("Error! Invalid condition construction.");
                 } else if (tmp == 0) {
                     // if (isCorrCods(altStr)) {
                         transIf(targetStr);
-                    // } else throw std::logic_error("Error! Invalid condition construction.");
-                } else throw std::logic_error("Error! Invalid condition construction.");
+                    /* } else {
+                        throw std::logic_error("Error! Invalid condition construction.");
+                    } */
+                } else {
+                    throw std::logic_error("Error! Invalid condition construction.");
+                }
             }
 
             // validate loop operators
             if (tmpStr = strstr(fileSource[targetStr], "ïîêà")) {
                 tmp = fileSource[targetStr] - tmpStr;
                 tmpStr = strstr(fileSource[targetStr], "òî");
+
                 if (tmpStr == NULL) {
                     throw std::logic_error("Error! Invalid loop construction.");
                 } else if (tmp == 0) {
                     // if (isCorrCods(altStr)) {
                         transWhile(targetStr);
-                    // } else throw std::logic_error("Error! Invalid loop construction.");
-                } else throw std::logic_error("Error! Invalid loop construction.");
+                    /* } else {
+                      throw std::logic_error("Error! Invalid loop construction.");
+                    } */
+                } else {
+                    throw std::logic_error("Error! Invalid loop construction.");
+                }
             }
         }
 
@@ -502,74 +526,7 @@ void progPas::translate() {
     }
 }
 
-
-/*
-void substring(char *v, char *str, size_t n, size_t m) {
-    char *alt1, *alt2;
-    int i, len;
-
-    len = n + m;
-    strncpy(alt1, str, len);
-
-    len = strlen(alt1);
-    for (i = 0; i < len; ++i) {
-        alt2[len - i] = alt1[i];
-    }
-    strncpy(alt1, alt2, len - n);
-    alt1[len - n] = '\0';
-
-    len = strlen(alt1);
-    for (i = 0; i < len; ++i) {
-        alt2[len - i] = alt1[i];
-    }
-
-    v = alt2;
-    
-    /*
-    int i,j;
-    for (i=0, j=n-1; j<n-1+m; ++i, ++j)
-    	v[i] = str[j];
-    v[i] = '\0';
-    *
-}
-*/
-
-/*
-bool isCorrect(char *str) {
-    char *nums = "0123456789";
-    char *abcs = "abcdefghijklmnopqrstuvwyxz";
-    char *ABCs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-    unsigned int i, j, left, right;
-    left = right = 0;
-    for (i = 0; str[i] == ' ' || i < strlen(str); i++) {
-        ++left;
-    }
-
-    if (left == strlen(str) - 1) return 0;
-    for (i = strlen(str) - 1; str[i] == ' ' || i >= 0; i--) {
-        ++right;
-    }
-
-    bool corr = 1;
-    for (i = left; i <= right && corr; ++i) {
-        bool inSet = 0;
-        for (j = 0; j < strlen(nums) && !inSet; j++) {
-            if (str[i] == nums[j]) {
-                inSet = 1;
-            }
-        }
-        for (j = 0; j < strlen(nums) && !inSet; j++) {
-            if (str[i] == abcs[j] || str[i] == ABCs[j]) {
-                inSet = 1;
-            }
-        }
-        if (!inSet) corr = 0;
-    }
-
-    return corr;
-}
-*/
+// Simple function to put spaces into string.
 
 void putSpaces(char *str, unsigned int pos, unsigned int num) {
     int int i, len = strlen(str);
